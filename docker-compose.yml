@@ -1,0 +1,17 @@
+services:
+    database:
+        image: mysql:9.3
+        restart: always
+        environment:
+            MYSQL_USER: 'laravel'
+            MYSQL_PASSWORD: 'secret'
+            MYSQL_ROOT_PASSWORD: 'root'
+            MYSQL_DATABASE: 'recipes_api'
+        ports:
+            - "3306:3306"
+        volumes:
+            - 'database:/var/lib/mysql'
+
+volumes:
+    database:
+        driver: local
