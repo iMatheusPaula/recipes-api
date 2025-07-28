@@ -55,6 +55,26 @@ Headers para endpoints protegidos:
 Authorization: Bearer {token}
 ```
 
+## Receitas
+
+Qualquer usuário poderá visualizar todas as receitas, mas apenas usuários autenticados poderão criar, editar ou excluir
+receitas. Cada receita é associada a um usuário, e somente o proprietário da receita pode editá-la ou excluí-la.
+
+A regra de update e delete foram definidas no middleware `can`, na própria rota, ela é realizada através da Policy de
+Recipe
+
+### Endpoints
+
+```
+GET /api/recipes - Listar todas (público)
+GET /api/recipes/{recipe} - Visualizar uma receita específica (público)
+POST /api/recipes - Criar uma nova receita (autenticado + id do usuário automático)
+PUT /api/recipes/{recipe} - Atualizar (autenticado + proprietário)
+DELETE /api/recipes/{recipe} - Excluir (autenticado + proprietário)
+```
+
 ## Documentações utilizadas
 
 * [Laravel Sanctum](https://laravel.com/docs/12.x/sanctum)
+* [Laravel Policies](https://laravel.com/docs/12.x/authorization#creating-policies)
+* https://medium.com/@zulfikarditya/mastering-laravel-policies-a-complete-guide-to-authorization-in-laravel-991bbdcc6756
