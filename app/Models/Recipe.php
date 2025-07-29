@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Recipe extends Model
 {
@@ -14,6 +16,13 @@ class Recipe extends Model
         'instructions',
         'user_id'
     ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['average_rating'];
 
     protected function casts(): array
     {
@@ -32,5 +41,23 @@ class Recipe extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the reviews for the recipe.
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Creates an average recipe rating attribute
+     */
+    protected function averageRating(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->reviews()->avg('rating')
+        );
     }
 }

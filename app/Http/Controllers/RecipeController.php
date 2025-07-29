@@ -15,7 +15,10 @@ class RecipeController extends Controller
      */
     public function index(): JsonResponse
     {
-        $recipes = Recipe::all();
+        $recipes = Recipe::query()
+            ->with(['user', 'reviews'])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return response()->json($recipes);
     }
@@ -49,6 +52,8 @@ class RecipeController extends Controller
     public function show(Recipe $recipe): JsonResponse
     {
         try {
+            $recipe->load(['user', 'reviews']);
+
             return response()->json($recipe);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
