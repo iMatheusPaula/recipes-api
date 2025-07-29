@@ -63,6 +63,17 @@ receitas. Cada receita é associada a um usuário, e somente o proprietário da 
 A regra de update e delete foram definidas no middleware `can`, na própria rota, ela é realizada através da Policy de
 Recipe
 
+### Avaliações (Reviews)
+
+O sistema permite que visitantes (sem necessidade de autenticação) avaliem as receitas com uma nota de 1 á 5 e deixem um
+comentário. Cada receita exibe seus comentários, avaliações e uma nota média calculada a partir de todas as avaliações
+recebidas.
+
+Para evitar várias avaliações do mesmo visitante, seja ele autenticado ou não, existe uma validação no `ReviewRequest`
+que verifica se o usuário já avaliou a receita, através do seu IP que fica armazenado no banco de dados junto a sua
+avaliação. Caso o usuário já tenha avaliado a receita, uma exceção é lançada e o usuário é notificado de que já avaliou
+a receita.
+
 ### Endpoints
 
 ```
@@ -71,10 +82,16 @@ GET /api/recipes/{recipe} - Visualizar uma receita específica (público)
 POST /api/recipes - Criar uma nova receita (autenticado + id do usuário automático)
 PUT /api/recipes/{recipe} - Atualizar (autenticado + proprietário)
 DELETE /api/recipes/{recipe} - Excluir (autenticado + proprietário)
+POST /api/recipes/{recipe}/reviews - Criar uma nova avaliação para uma receita específica (público)
 ```
+
+Ao visualizar uma ou todas as receitas, as avaliações associadas e o usuário criador são incluídas na response da api. A
+média das avaliações é calculada automaticamente no modelo `Recipe` através de um mutator `averageRating`, que retorna
+junto a receita o campo `average_rating`.
 
 ## Documentações utilizadas
 
 * [Laravel Sanctum](https://laravel.com/docs/12.x/sanctum)
 * [Laravel Policies](https://laravel.com/docs/12.x/authorization#creating-policies)
-* https://medium.com/@zulfikarditya/mastering-laravel-policies-a-complete-guide-to-authorization-in-laravel-991bbdcc6756
+* [Laravel Validation](https://laravel.com/docs/12.x/validation#performing-additional-validation-on-form-requests)
+* [Laravel Eloquent Mutators](https://laravel.com/docs/12.x/eloquent-mutators)
