@@ -1,19 +1,29 @@
 <?php
 
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::controller(AuthController::class)->group(function () {
+    Route::post('/register', 'register');
+    Route::post('/login', 'login');
+    Route::post('/logout', 'logout')->middleware('auth:sanctum');
+});
 
-Route::prefix('recipes')->controller(RecipeController::class)->group(function () {
-    Route::get('/', 'index');
-    Route::get('/{recipe}', 'show');
+Route::prefix('recipes')->group(function () {
+    // Public routes
+    Route::controller(RecipeController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{recipe}', 'show');
+    });
 
-    Route::middleware('auth:sanctum')->group(function () {
+    // Review routes
+    Route::post('/{recipe}/reviews', [ReviewController::class, 'store']);
+
+    // Protected routes
+    Route::controller(RecipeController::class)->middleware('auth:sanctum')->group(function () {
         Route::post('/', 'store');
         Route::put('/{recipe}', 'update')->middleware('can:update,recipe');
         Route::delete('/{recipe}', 'destroy')->middleware('can:delete,recipe');
