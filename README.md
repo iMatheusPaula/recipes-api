@@ -95,3 +95,4 @@ junto a receita o campo `average_rating`.
 * [Laravel Policies](https://laravel.com/docs/12.x/authorization#creating-policies)
 * [Laravel Validation](https://laravel.com/docs/12.x/validation#performing-additional-validation-on-form-requests)
 * [Laravel Eloquent Mutators](https://laravel.com/docs/12.x/eloquent-mutators)
+* [Pest Test Coverage](https://pestphp.com/docs/test-coverage)
