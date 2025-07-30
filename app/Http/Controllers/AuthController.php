@@ -21,19 +21,15 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-        try {
-            $data = $request->validated();
+        $data = $request->validated();
 
-            $user = User::query()->create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-            ]);
+        $user = User::query()->create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
 
-            return response()->json($user, Response::HTTP_CREATED);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], $e->getCode() ?: Response::HTTP_BAD_REQUEST);
-        }
+        return response()->json($user, Response::HTTP_CREATED);
     }
 
     /**
@@ -41,31 +37,28 @@ class AuthController extends Controller
      *
      * @param LoginRequest $request
      * @return JsonResponse
+     * @throws ValidationException
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        try {
-            $data = $request->validated();
+        $data = $request->validated();
 
-            $user = User::query()
-                ->where('email', $data['email'])
-                ->first();
+        $user = User::query()
+            ->where('email', $data['email'])
+            ->first();
 
-            if (!$user || !Hash::check($data['password'], $user->password)) {
-                throw ValidationException::withMessages([
-                    'email' => ['As credenciais estão incorretas.'],
-                ]);
-            }
-
-            $token = $user->createToken('auth_token')->plainTextToken;
-
-            return response()->json([
-                'access_token' => $token,
-                'token_type' => 'Bearer',
+        if (!$user || !Hash::check($data['password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['As credenciais estão incorretas.'],
             ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], $e->getCode() ?: Response::HTTP_BAD_REQUEST);
         }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ]);
     }
 
     /**
@@ -76,12 +69,8 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        try {
-            $request->user()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken()->delete();
 
-            return response()->json(['message' => 'Logout realizado com sucesso']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], $e->getCode() ?: Response::HTTP_BAD_REQUEST);
-        }
+        return response()->json(['message' => 'Logout realizado com sucesso']);
     }
 }
