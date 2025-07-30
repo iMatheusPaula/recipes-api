@@ -39,9 +39,14 @@ test('user cannot login with invalid password', function () {
 
     $response = $this->postJson('/api/login', $payload);
 
-    $response->assertStatus(400)
+    $response->assertStatus(422)
         ->assertJson([
-            'error' => 'As credenciais estão incorretas.',
+            'message' => 'As credenciais estão incorretas.',
+            'errors' => [
+                'email' => [
+                    'As credenciais estão incorretas.'
+                ]
+            ]
         ]);
 });
 
@@ -58,9 +63,14 @@ test('user cannot login with invalid email', function () {
 
     $response = $this->postJson('/api/login', $payload);
 
-    $response->assertStatus(400)
+    $response->assertStatus(422)
         ->assertJson([
-            'error' => 'As credenciais estão incorretas.',
+            'message' => 'As credenciais estão incorretas.',
+            'errors' => [
+                'email' => [
+                    'As credenciais estão incorretas.'
+                ]
+            ]
         ]);
 });
 
