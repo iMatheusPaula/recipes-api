@@ -89,6 +89,11 @@ Ao visualizar uma ou todas as receitas, as avaliações associadas e o usuário 
 média das avaliações é calculada automaticamente no modelo `Recipe` através de um mutator `averageRating`, que retorna
 junto a receita o campo `average_rating`.
 
+## Documentação Postman
+
+Na raiz do projeto existe uma coleção do Postman (`recipes-api.postman_collection.json`) contendo todas as rotas
+documentadas. Basta importar esse arquivo no Postman para ter acesso a todas as requisições disponíveis na API.
+
 ## Testes automatizados
 
 Foram feitos alguns testes de feature nesse projeto focando mais na regra de negocio e no comportamento esperado de
