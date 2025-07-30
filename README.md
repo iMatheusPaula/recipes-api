@@ -89,6 +89,40 @@ Ao visualizar uma ou todas as receitas, as avaliações associadas e o usuário 
 média das avaliações é calculada automaticamente no modelo `Recipe` através de um mutator `averageRating`, que retorna
 junto a receita o campo `average_rating`.
 
+## Testes automatizados
+
+Foram feitos alguns testes de feature nesse projeto focando mais na regra de negocio e no comportamento esperado de
+receitas, avaliações e autenticação. Para realização dos testes, foi utilizado o Pest PHP e o banco de dados SQLite.
+
+- Para executar os testes: `php artisan test`.
+
+- Para executar os testes com relatório de cobertura de código (requer Xdebug instalado):
+  `XDEBUG_MODE=coverage php artisan test --coverage`
+
+### Testes de Autenticação
+
+- **Registro de Usuários**: Testes que verificam se é possível registrar um novo usuário com dados válidos, e sem
+  e-mails duplicados.
+- **Login de Usuários**: Testes que verificam se um usuário pode fazer login com credenciais válidas e receber um token
+  de acesso.
+- **Logout de Usuários**: Testes que verificam se um usuário autenticado pode fazer logout e se revoga seu token de
+  acesso.
+
+### Testes de Receitas (Recipes)
+
+- **Criação de Receitas**: Testes que verificam se somente usuários autenticados podem criar receitas e se o ID dele já
+  é automaticamente associado à receita.
+- **Visualização de Receitas**: Testes que verificam se é retornado uma receita específica com os relacionamentos e se a
+  média de avaliações é calculada corretamente.
+- **Listagem de Receitas**: Testes que verificam se é listado todas as receitas com os relacionamentos.
+- **Atualização de Receitas**: Testes que verificam se somente o proprietário de uma receita pode atualizá-la.
+- **Exclusão de Receitas**: Testes que verificam se somente o proprietário de uma receita pode excluí-la.
+
+### Testes de Avaliações (Reviews)
+
+- **Criação de Avaliações**: Testes que verificam se é possível criar uma avaliação para uma receita, e se o sistema
+  impede que o mesmo endereço IP crie múltiplas avaliações para a mesma receita.
+
 ## Documentações utilizadas
 
 * [Laravel Sanctum](https://laravel.com/docs/12.x/sanctum)
