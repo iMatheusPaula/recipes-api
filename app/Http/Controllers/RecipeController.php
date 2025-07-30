@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateRecipeRequest;
 use App\Models\Recipe;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class RecipeController extends Controller
 {
@@ -39,7 +40,7 @@ class RecipeController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        return response()->json($recipe, 201);
+        return response()->json($recipe, Response::HTTP_CREATED);
     }
 
     /**
@@ -71,6 +72,6 @@ class RecipeController extends Controller
     {
         $recipe->delete();
 
-        return response()->json(['message' => 'Recipe deleted successfully'], 204);
+        return response()->json(status: Response::HTTP_NO_CONTENT);
     }
 }

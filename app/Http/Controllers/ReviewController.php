@@ -20,11 +20,11 @@ class ReviewController extends Controller
     {
         $data = $request->validated();
 
-        $recipe->reviews()->create([
+        $review = $recipe->reviews()->create([
             ...$data,
             'ip_address' => $request->ip()
         ]);
 
-        return response()->json('Avaliação criada com sucesso.', Response::HTTP_CREATED);
+        return response()->json($review, Response::HTTP_CREATED);
     }
 }
