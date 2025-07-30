@@ -18,17 +18,13 @@ class ReviewController extends Controller
      */
     public function store(ReviewRequest $request, Recipe $recipe): JsonResponse
     {
-        try {
-            $data = $request->validated();
+        $data = $request->validated();
 
-            $recipe->reviews()->create([
-                ...$data,
-                'ip_address' => $request->ip()
-            ]);
+        $recipe->reviews()->create([
+            ...$data,
+            'ip_address' => $request->ip()
+        ]);
 
-            return response()->json('Avaliação criada com sucesso.', Response::HTTP_CREATED);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json('Avaliação criada com sucesso.', Response::HTTP_CREATED);
     }
 }

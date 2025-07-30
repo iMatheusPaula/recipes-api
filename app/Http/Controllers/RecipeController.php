@@ -32,18 +32,14 @@ class RecipeController extends Controller
      */
     public function store(CreateRecipeRequest $request): JsonResponse
     {
-        try {
-            $data = $request->validated();
+        $data = $request->validated();
 
-            $recipe = Recipe::query()->create([
-                ...$data,
-                'user_id' => auth()->id(),
-            ]);
+        $recipe = Recipe::query()->create([
+            ...$data,
+            'user_id' => auth()->id(),
+        ]);
 
-            return response()->json($recipe, 201);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        return response()->json($recipe, 201);
     }
 
     /**
@@ -51,13 +47,9 @@ class RecipeController extends Controller
      */
     public function show(Recipe $recipe): JsonResponse
     {
-        try {
-            $recipe->load(['user', 'reviews']);
+        $recipe->load(['user', 'reviews']);
 
-            return response()->json($recipe);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        return response()->json($recipe);
     }
 
     /**
@@ -65,15 +57,11 @@ class RecipeController extends Controller
      */
     public function update(UpdateRecipeRequest $request, Recipe $recipe): JsonResponse
     {
-        try {
-            $data = $request->validated();
+        $data = $request->validated();
 
-            $recipe->update($data);
+        $recipe->update($data);
 
-            return response()->json($recipe);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        return response()->json($recipe);
     }
 
     /**
@@ -81,12 +69,8 @@ class RecipeController extends Controller
      */
     public function destroy(Recipe $recipe): JsonResponse
     {
-        try {
-            $recipe->delete();
+        $recipe->delete();
 
-            return response()->json(['message' => 'Recipe deleted successfully'], 204);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        return response()->json(['message' => 'Recipe deleted successfully'], 204);
     }
 }
