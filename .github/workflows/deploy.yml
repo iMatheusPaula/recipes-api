@@ -1,0 +1,51 @@
+name: Build & Push Image
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  ECR_REPOSITORY: recipes-api
+  AWS_REGION: us-east-1
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set image tag
+        id: image
+        run: |
+          IMAGE_TAG=${GITHUB_SHA::7}
+          echo "tag=${IMAGE_TAG}" >> $GITHUB_OUTPUT
+          echo "full=${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}" >> $GITHUB_OUTPUT
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg COMPOSER_INSTALL_FLAGS="--no-dev" \
+            -t ${{ env.ECR_REPOSITORY }}:${{ steps.image.outputs.tag }} \
+            .
+
+      - name: Tag image
+        run: |
+          docker tag \
+            ${{ env.ECR_REPOSITORY }}:${{ steps.image.outputs.tag }} \
+            ${{ steps.image.outputs.full }}
+
+      - name: Push image to ECR
+        run: docker push ${{ steps.image.outputs.full }}
