@@ -60,7 +60,11 @@ class Recipe extends Model
     protected function averageRating(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->reviews()->avg('rating')
+            get: function () {
+                $average = $this->reviews()->avg('rating');
+
+                return $average !== null ? (float) $average : null;
+            }
         );
     }
 }
