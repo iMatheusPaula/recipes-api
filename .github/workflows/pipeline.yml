@@ -1,0 +1,15 @@
+name: pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+
+  artefacts:
+    needs: tests
+    uses: ./.github/workflows/artefacts.yml
+    secrets: inherit
