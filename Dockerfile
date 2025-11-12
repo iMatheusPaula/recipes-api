@@ -33,8 +33,6 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-ENV APP_HOME=/var/www/html
-
 COPY --from=vendor /app /var/www/html
 
 COPY docker/default.conf /etc/nginx/conf.d/default.conf
