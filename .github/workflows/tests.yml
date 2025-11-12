@@ -1,8 +1,8 @@
-name: CI
+name: tests
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   testing:
