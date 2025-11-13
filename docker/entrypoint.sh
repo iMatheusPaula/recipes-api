@@ -38,9 +38,10 @@ fi
 
 # If running in Lambda, execute command directly
 # Otherwise, start process manager
+# Lambda: always receives command as single string argument
+echo "Starting process manager..."
 if [ -n "${LAMBDA_TASK_ROOT:-}" ]; then
-    exec "$@"
+    exec sh -c "$1"
 else
-    echo "Starting process manager..."
     exec "$@"
 fi
