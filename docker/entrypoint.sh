@@ -8,9 +8,10 @@ cd /var/www/html
 if [ -n "${LAMBDA_TASK_ROOT:-}" ]; then
     echo "Running in Lambda environment..."
     
-    # Lambda: Use /tmp for cache directories
+    # Lambda: Use in-memory drivers (no file system writes needed)
     export CACHE_DRIVER=array
     export SESSION_DRIVER=array
+    export LOG_CHANNEL=errorlog
     export VIEW_COMPILED_PATH=/tmp/storage/framework/views
     
     # Skip directory creation and permissions in Lambda
